@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:13.13
+    environment:
+      POSTGRES_PASSWORD: foobarhogepiyo
+    ports:
+      - "5437:5432"
+    volumes:
+      - data:/var/lib/postgrespl/data
+
+  adminer:
+    image: adminer
+    ports:
+      - 3030:8080
+
+volumes:
+  data:
