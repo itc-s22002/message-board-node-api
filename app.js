@@ -8,6 +8,7 @@ import passportConfig from "./util/auth.js";
 
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
+import messagesRouter from "./routes/messages.js";
 
 const app = express();
 
@@ -30,5 +31,6 @@ app.use(passportConfig(passport));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/messages", messagesRouter);
 
 export default app;

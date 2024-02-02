@@ -13,14 +13,15 @@ const prisma = new PrismaClient();
 */
 router.get('/', function (req, res, next) {
     if (req.isAuthenticated()) {
-        res.status(200).json({ message: "logged in"});
+        res.status(200).json({message: "logged in"});
     } else {
-        res.status(401).json({ message: 'unauthenticated' });
-    }});
+        res.status(401).json({message: 'unauthenticated'});
+    }
+});
+
 /*
 * ログイン
 */
-
 // router.post("/login", passport.authenticate("local", {
 //     successReturnToOrRedirect: "/",
 //     failureRedirect: "/users/login",
@@ -30,12 +31,18 @@ router.get('/', function (req, res, next) {
 
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
-        if (err) { return next(err); }
-        if (!user) { return res.status(401).json({ message: "name and/or password is invalid" }); }
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.status(401).json({message: "name and/or password is invalid"});
+        }
 
         req.logIn(user, (err) => {
-            if (err) { return next(err); }
-            return res.status(200).json({ message: "OK"});
+            if (err) {
+                return next(err);
+            }
+            return res.status(200).json({message: "OK"});
         });
     })(req, res, next);
 });
@@ -43,10 +50,9 @@ router.post('/login', (req, res, next) => {
 /*
 * 新規登録
 */
-
 router.post("/signup", async (req, res, next) => {
     try {
-        const { name , pass } = req.body;
+        const {name, pass} = req.body;
         if (!name) {
             return res.status(400).json({message: "not name"});
         }
