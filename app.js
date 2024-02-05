@@ -6,10 +6,11 @@ import session from "express-session";
 import passport from "passport";
 import passportConfig from "./util/auth.js";
 
+
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 import messagesRouter from "./routes/messages.js";
-
+import cors from "cors"
 const app = express();
 
 app.use(logger("dev"));
@@ -28,6 +29,14 @@ app.use(session({
 // passport
 app.use(passport.authenticate("session"));
 app.use(passportConfig(passport));
+
+//cors
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+        credentials: true,
+    }),
+);
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

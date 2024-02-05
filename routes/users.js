@@ -12,10 +12,10 @@ const prisma = new PrismaClient();
 * 状態確認
 */
 router.get('/', function (req, res, next) {
-    if (req.isAuthenticated()) {
-        res.status(200).json({message: "logged in"});
+    if (!req.user) {
+        res.status(401).json({ message: "unauthenticated" });
     } else {
-        res.status(401).json({message: 'unauthenticated'});
+        res.status(200).json({ user: req.user });
     }
 });
 
@@ -29,24 +29,15 @@ router.get('/', function (req, res, next) {
 //     keepSessionInfo: true
 // }));
 
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        if (err) {
-            return next(err);
+router.post('/login',
+    passport.authenticate('local'), (req, res,next) => {
+        try{
+            res.status(200).json({ message:"OK"});
+        }catch (error) {
+            res.status(400).json({message: error.message});
         }
-        if (!user) {
-            return res.status(401).json({message: "name and/or password is invalid"});
-        }
-
-        req.logIn(user, (err) => {
-            if (err) {
-                return next(err);
-            }
-            return res.status(200).json({message: "OK"});
-        });
-    })(req, res, next);
-});
-
+    }
+);
 /*
 * 新規登録
 */
