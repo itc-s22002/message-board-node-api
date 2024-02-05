@@ -73,4 +73,23 @@ router.get("/logout", (req, res, next) => {
     });
     res.status(200).json({message: "OK"});
 });
+
+/*
+* ユーザー一覧
+* */
+
+router.get("/read",async(req, res, next) => {
+    try {
+        const documents = await prisma.user.findMany({
+            select:{id:true,name:true},
+            orderBy: [
+                {createdAt: "desc"}
+            ]
+        });
+        res.status(201).json({message: "ok", documents});
+    }catch (error){
+        res.status(500).json({message: error.message});
+    }
+})
+
 export default router;
