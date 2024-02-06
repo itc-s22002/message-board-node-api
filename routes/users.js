@@ -76,8 +76,7 @@ router.get("/logout", (req, res, next) => {
 
 /*
 * ユーザー一覧
-* */
-
+*/
 router.get("/read",async(req, res, next) => {
     try {
         const documents = await prisma.user.findMany({

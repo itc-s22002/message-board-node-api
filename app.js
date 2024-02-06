@@ -5,6 +5,7 @@ import logger from "morgan";
 import session from "express-session";
 import passport from "passport";
 import passportConfig from "./util/auth.js";
+import {cdate} from "cdate"
 
 
 import indexRouter from "./routes/index.js";
@@ -37,6 +38,14 @@ app.use(
         credentials: true,
     }),
 );
+
+// cdate を使えるようにする
+app.use((req, res, next) => {
+    res.locals.date_format =
+        (d) => cdate(d).format("YYYY-MM-DD HH:mm:ss");
+    next();
+});
+
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
