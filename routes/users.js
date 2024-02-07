@@ -13,31 +13,27 @@ const prisma = new PrismaClient();
 */
 router.get('/', function (req, res, next) {
     if (!req.user) {
-        res.status(401).json({ message: "unauthenticated" });
+        res.status(401).json({message: "unauthenticated"});
     } else {
-        res.status(200).json({ user: req.user });
+        res.status(200).json({user: req.user});
     }
 });
 
 /*
 * ログイン
 */
-// router.post("/login", passport.authenticate("local", {
-//     successReturnToOrRedirect: "/",
-//     failureRedirect: "/users/login",
-//     failureMessage: true,
-//     keepSessionInfo: true
-// }));
+router.post("/login",
+    passport.authenticate('local',{failureRedirect: '/users/error'}), (req, res, next) => {
+            res.status(200).json({message: "OK"});
 
-router.post('/login',
-    passport.authenticate('local'), (req, res,next) => {
-        try{
-            res.status(200).json({ message:"OK"});
-        }catch (error) {
-            res.status(400).json({message: error.message});
-        }
     }
 );
+router.get("/error",(req, res, next) =>{
+    res.status(401).json({ message: "name and/or password is invalid" });
+})
+
+
+
 /*
 * 新規登録
 */
@@ -77,16 +73,16 @@ router.get("/logout", (req, res, next) => {
 /*
 * ユーザー一覧
 */
-router.get("/read",async(req, res, next) => {
+router.get("/read", async (req, res, next) => {
     try {
         const documents = await prisma.user.findMany({
-            select:{id:true,name:true},
+            select: {id: true, name: true},
             orderBy: [
                 {createdAt: "desc"}
             ]
         });
         res.status(201).json({message: "ok", documents});
-    }catch (error){
+    } catch (error) {
         res.status(500).json({message: error.message});
     }
 })
